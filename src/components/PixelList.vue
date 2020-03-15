@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
     list of Pixels
     <ul id="example-1">
-      <li v-for="pixel in pixels" :key="pixel.name">
+      <li v-for="pixel in pixels" :key="pixel.ip">
         {{ pixel }}
     </li>
     </ul>
@@ -13,8 +13,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Pixel} from '../models/pixel';
-var dgram = require('dgram');
-
+const dgram = require('dgram');
 
 @Component
 export default class PixelList extends Vue {
@@ -22,28 +21,46 @@ export default class PixelList extends Vue {
 
   public pixels: Pixel[] = [];
   public socket: any;
+  public stateSender: any;
 
+  public portState = 7007;
+  public portCommand = 7000;
   constructor()
   {
     super();
-    this.pixels.push(new Pixel(2,3,"ebbe","#ff0000","1234"));
-    this.pixels.push(new Pixel(2,3,"bob","#0000ff","1234"));
-    this.pixels.push(new Pixel(2,3,"john","#00ff00","1234"));
-    this.pixels.push(new Pixel(2,3,"torben","#ffff00","1234"));
-
+    
+    this.stateSender = dgram.createSocket("udp4");
     this.socket = dgram.createSocket('udp4');
-    this.socket.on('message', function(msg:any, rinfo:any) {
+    
+    //this.pixels.push(new Pixel(2,3,"ebbe","#ff0000","1234"));
+    //this.pixels.push(new Pixel(2,3,"bob","#0000ff","1234"));
+    //this.pixels.push(new Pixel(2,3,"john","#00ff00","1234"));
+    //this.pixels.push(new Pixel(2,3,"torben","#ffff00","1234"));
+
+    this.socket.on('message', (msg:any, rinfo:any) => {
       console.log('I got this message: ' + msg.toString());
-      //this.pixels.push(new Pixel(3,4,msg.toString(), "#ff0000","1234"))
+      this.handleMessage(msg.toString());
     });
     this.socket.bind(7000);
 
-    /*window.setInterval(function(p: Pixel[]) {
+    window.setInterval( () => {
       /// call your function here
-      p.push(new Pixel(2,3,"torben","#ffff00"));
-      console.log('hi');
-    }, 500, this.pixels); 
-    */
+      this.sendPixelState();
+    }, 1000, ); 
+    
+  }
+  private handleMessage(message:string)
+  {
+    //if this and that... respond to commands
+    this.pixels.push(new Pixel(3,4,msg.toString(), "#ff0000", rinfo.address));
+  } 
+
+  private sendPixelState()
+  {
+    for (let pixel of this.pixels) {
+      console.log(pixel.getState());
+      this.stateSender.send(pixel.getState(), 0, pixel.getState().length, this.portState, pixel.ip );
+    }
   }
 }
 </script>
