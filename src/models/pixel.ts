@@ -1,10 +1,10 @@
-enum State {
-    MovingUp,
-    MovingDown,
-    MovingLeft,
-    MovingRight,
-    Stuck,
-    Stationary,  
+export enum State {
+    MovingUp = "MovingUp",
+    MovingDown = "MovingDown",
+    MovingLeft = "MovingLeft",
+    MovingRight = "MovingRight",
+    Stuck = "Stuck",
+    Stationary = "Stationary",  
 }
 
 export class Pixel
@@ -18,7 +18,7 @@ export class Pixel
         this.ip = ip;
         this.state = State.Stationary;
         this.speed = 1;
-        this.lastCommand = Date.now();
+        this.lastCommand = Date.now();  
     }
 
     public x: number;
@@ -33,12 +33,13 @@ export class Pixel
     public getState(): string
     {
         let message: string = "PixelState;";
-        message += "name:"+this.name;
+        message += "name:"+this.name+";";
         message += "x:"+this.x+";";
         message += "y:"+this.y+";";
         message += "color:"+this.color+";";
         message += "speed:"+this.speed+";"; 
-        message += "state:"+this.state+";";
+        message += "state:"+this.state.toString()+";";
+        message += "age:"+(Date.now()-this.lastCommand);
         return message;
     }
 

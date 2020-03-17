@@ -1,13 +1,13 @@
 <template>
+
   <div id="app">
-    
     <div style="width: 100%; height: 100vh;" >
-      <div style="width:20%; height: 100vh;background-color: #ff0000; float:left;" >
+      <div style="width:20%; height: 100vh;background-color: #D3D3D3; float:left;" >
         
         <PixelList msg="Hello World"/>
         
       </div>
-      <div style="width:80%; height: 100vh; background-color:#00ff00; float:left;">
+      <div style="width:80%; height: 100vh; background-color:#ffffff; float:left;">
 
         <PixelCanvas msg="fucked up canvas?"/>
 
